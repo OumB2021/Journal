@@ -9,6 +9,10 @@ export default defineConfig({
   out: "./migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL_DIRECT ?? process.env.DATABASE_URL!,
+    url: (() => {
+      const url = process.env.DIRECT_URL;
+      if (!url) throw new Error("DIRECT_URL must be set for migrations");
+      return url;
+    })(),
   },
 });

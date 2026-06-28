@@ -74,7 +74,7 @@ would make it smoother — want me to add it?")
 
 ## Repo Structure
 
-```
+```text
 journal/
 ├── apps/
 │   ├── mobile/                  # Expo / React Native app

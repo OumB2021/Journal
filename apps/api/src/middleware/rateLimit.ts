@@ -17,7 +17,11 @@ export async function rateLimit(
   try {
     await limiter.consume(req.ip ?? "unknown");
     next();
-  } catch {
-    res.status(429).json({ error: "Too many requests" });
+  } catch (err) {
+    if (!(err instanceof Error)) {
+      res.status(429).json({ error: "Too many requests" });
+    } else {
+      next(err);
+    }
   }
 }
