@@ -1,0 +1,10 @@
+node_modules
+dist
+.turbo
+.expo
+.env
++.env.*
++!.env.example
+*.local
+ios
+android
