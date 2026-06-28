@@ -1,3 +1,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  /* ── Typography scale ───────────────────────────────────────── */
+  .type-hero {
+    @apply font-sans-bold text-[36px] leading-tight tracking-tight;
+  }
+  .type-display {
+    @apply font-sans-bold text-[30px] leading-tight tracking-tight;
+  }
+  .type-heading {
+    @apply font-sans-bold text-[24px] leading-tight;
+  }
+  .type-title {
+    @apply font-sans-semibold text-[20px] leading-snug;
+  }
+  .type-base {
+    @apply font-sans-medium text-[17px] leading-normal;
+  }
+  .type-body {
+    @apply font-sans text-[15px] leading-normal;
+  }
+  .type-caption {
+    @apply font-sans text-[13px] leading-normal;
+  }
+  .type-micro {
+    @apply font-sans text-[11px] leading-normal;
+  }
+
+  /* ── Divider / hairline ─────────────────────────────────────── */
+  .divider {
+    @apply h-px bg-border-subtle;
+  }
+
+  /* ── Badge ──────────────────────────────────────────────────── */
+  .badge {
+    @apply rounded-full px-sm py-xs font-sans-medium text-[11px];
+  }
+  .badge-accent {
+    @apply badge bg-accent-subtle text-text-primary;
+  }
+  .badge-danger {
+    @apply badge bg-danger-subtle text-danger;
+  }
+  .badge-success {
+    @apply badge bg-success-subtle text-success;
+  }
+  .badge-warning {
+    @apply badge bg-warning-subtle text-warning;
+  }
+}
