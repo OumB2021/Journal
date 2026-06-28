@@ -15,18 +15,17 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { Ionicons, Feather } from "@expo/vector-icons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
 // ── Design tokens (from Pencil design — do not change) ───────────────
 const H_PAD = 16; // outer nav horizontal padding
-const B_PAD = 20; // outer nav bottom padding
+const B_PAD = 25; // outer nav bottom padding
 const PLUS_SIZE = 56; // plus button diameter
 const NAV_GAP = 12; // gap between pill and plus button
 const TB_PAD = 1; // tab-bar inner padding (all 4 sides)
 const TB_GAP = 4; // gap between the 3 tab slots
 const TB_H = 56; // tab-bar total height
-const CAP_H = TB_H - TB_PAD * 2; // capsule height = 48
+const CAP_H = TB_H - TB_PAD * 2; // capsule height = 54
 const ICON_SIZE = 22;
 const PLUS_ICON = 24;
 const LABEL_SIZE = 10;
@@ -79,7 +78,6 @@ function capsuleTargetX(index: number, cw: number): number {
 
 // ── TabBar ───────────────────────────────────────────────────────────
 export default function TabBar({ state, navigation }: BottomTabBarProps) {
-  const insets = useSafeAreaInsets();
   const isDark = useColorScheme() === "dark";
 
   const [tbWidth, setTbWidth] = useState(estimateTabBarWidth);
@@ -123,25 +121,17 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
 
   return (
     <View
-      className="bg-bg-base"
-      style={[
-        styles.nav,
-        {
-          paddingBottom: B_PAD,
-        },
-      ]}
+      className="bg-bg-base flex-row items-center justify-center gap-3 px-4"
+      style={{ paddingBottom: B_PAD }}
     >
       {/* ── Pill-shaped tab container ──────────────── */}
       <View
-        style={[
-          styles.tabBar,
-          { backgroundColor: tabBarBg, borderColor: tabBarBorder },
-        ]}
+        className={`flex-1 h-14 rounded-full border flex-row items-center gap-1 p-px bg-bg-base`}
+        style={{ borderColor: tabBarBorder }}
         onLayout={handleLayout}
       >
         {/* Animated capsule — rendered first so it sits behind icons */}
         <Animated.View
-          className="align-center justify-center py-auto"
           style={[
             styles.capsule,
             { backgroundColor: capsuleBg, width: capW },
@@ -154,7 +144,8 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
           return (
             <Pressable
               key={name}
-              style={styles.tab}
+              className="flex-1 items-center justify-center py-1.5 gap-[3px]"
+              style={{ height: CAP_H }}
               onPress={() => navigation.navigate(name)}
               accessibilityRole="tab"
               accessibilityLabel={label}
@@ -166,15 +157,11 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
                 color={active ? activeColor : inactIconColor}
               />
               <Text
-                style={[
-                  styles.label,
-                  {
-                    color: active ? activeColor : inactLblColor,
-                    fontFamily: active
-                      ? "Inter_600SemiBold"
-                      : "Inter_500Medium",
-                  },
-                ]}
+                className="text-[10px]"
+                style={{
+                  color: active ? activeColor : inactLblColor,
+                  fontFamily: active ? "Inter_600SemiBold" : "Inter_500Medium",
+                }}
               >
                 {label}
               </Text>
@@ -185,7 +172,8 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
 
       {/* ── Plus CTA — separate floating circle, NOT a tab ─ */}
       <Pressable
-        style={[styles.plus, { backgroundColor: plusBg }]}
+        className="w-14 h-14 rounded-full items-center justify-center"
+        style={{ backgroundColor: plusBg }}
         onPress={() => {
           /* TODO */
         }}
@@ -199,47 +187,11 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
 }
 
 const styles = StyleSheet.create({
-  nav: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: NAV_GAP,
-    paddingHorizontal: H_PAD,
-    paddingTop: 0,
-  },
-  tabBar: {
-    flex: 1,
-    height: TB_H,
-    borderRadius: 999,
-    borderWidth: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: TB_GAP,
-    padding: TB_PAD,
-  },
   capsule: {
     position: "absolute",
     left: 0,
-    top: 0,
-    height: CAP_H,
+    top: 1,
+    height: 45,
     borderRadius: 999,
-  },
-  tab: {
-    flex: 1,
-    height: CAP_H,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 6,
-    gap: 3,
-  },
-  label: {
-    fontSize: LABEL_SIZE,
-  },
-  plus: {
-    width: PLUS_SIZE,
-    height: PLUS_SIZE,
-    borderRadius: PLUS_SIZE / 2,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
