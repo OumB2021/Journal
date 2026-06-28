@@ -42,6 +42,7 @@ These are fixed. Build within them. Do not propose alternatives unless I explici
 ## Tech Stack
 
 **Mobile (`apps/mobile`)**
+
 - Expo + React Native + TypeScript
 - Expo Router (file-based navigation)
 - NativeWind (styling)
@@ -50,6 +51,7 @@ These are fixed. Build within them. Do not propose alternatives unless I explici
 - `@clerk/clerk-expo` (auth)
 
 **Backend (`apps/api`)**
+
 - Node + Express + TypeScript
 - `@clerk/express` (token verification + `clerkClient`)
 - Drizzle ORM + `drizzle-kit` (schema, queries, migrations)
@@ -60,6 +62,7 @@ These are fixed. Build within them. Do not propose alternatives unless I explici
 - `rate-limiter-flexible` (Redis-backed limits)
 
 **Shared (`packages/*`)**
+
 - `@journal/db` — Drizzle schema, migrations, the `db` instance
 - `@journal/shared` — Zod schemas + types used by BOTH mobile and api
 - `@journal/config` — shared eslint / tsconfig / prettier
@@ -111,6 +114,7 @@ journal/
 ```
 
 **Within `apps/mobile`:**
+
 - `app/` is for routes and screens only. Screens compose components and call hooks or stores. No large reusable UI blocks or business logic here.
 - `components/` is for reusable UI. Create a component when it is reused, makes a screen easier to read, or represents a clear UI concept (PostCard, PostHeader, Avatar, CategoryBadge, LikeButton, ProfileHeader). Do not create components too early.
 - `data/` holds hardcoded content. Keep it typed.
@@ -142,15 +146,15 @@ the simplest thing that works.
 routes with a small `requireAuth` guard that reads `getAuth(req)`:
 
 ```ts
-import { clerkMiddleware, getAuth } from '@clerk/express'
+import { clerkMiddleware, getAuth } from "@clerk/express";
 
-app.use(clerkMiddleware())
+app.use(clerkMiddleware());
 
 function requireAuth(req, res, next) {
-  const { isAuthenticated, userId } = getAuth(req)
-  if (!isAuthenticated) return res.status(401).json({ error: 'Unauthorized' })
-  req.userId = userId            // Clerk user id ("user_…")
-  next()
+  const { isAuthenticated, userId } = getAuth(req);
+  if (!isAuthenticated) return res.status(401).json({ error: "Unauthorized" });
+  req.userId = userId; // Clerk user id ("user_…")
+  next();
 }
 ```
 
@@ -169,12 +173,12 @@ function requireAuth(req, res, next) {
 - **Connection gotcha (critical):** the runtime client uses the Supabase **pooled** connection (Supavisor transaction mode, port 6543) and MUST set `prepare: false`, or production throws "prepared statement already exists":
 
 ```ts
-import { drizzle } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
-import * as schema from './schema'
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import * as schema from "./schema";
 
-const client = postgres(process.env.DATABASE_URL!, { prepare: false })
-export const db = drizzle(client, { schema })
+const client = postgres(process.env.DATABASE_URL!, { prepare: false });
+export const db = drizzle(client, { schema });
 ```
 
 - **Two URLs:** `DATABASE_URL` (pooled) for runtime; `DIRECT_URL` (direct, port 5432) for migrations. `drizzle.config.ts` points at `DIRECT_URL`.
@@ -213,7 +217,7 @@ Do not approximate. Do not simplify unless explicitly asked.
 
 ## Styling Rules
 
-Use NativeWind / Tailwind classes strictly. Do not use StyleSheet unless a thing genuinely cannot be styled with class names.
+Use NativeWind / Tailwind classes strictly. **DO NOT** use StyleSheet unless a thing genuinely cannot be styled with class names.
 
 - Prioritize clean, readable mobile UI; make it responsive across screen sizes.
 - Prefer reusable class patterns via utilities in `global.css`. If a needed utility doesn't exist and there's a clear case for one, add it to `global.css` following BEM naming.
@@ -231,7 +235,7 @@ Use NativeWind / Tailwind classes strictly. Do not use StyleSheet unless a thing
 - Pressable / TouchableOpacity pressed states
 - Shadows (differ per platform)
 
-Everywhere else, use NativeWind.
+Everywhere else, **USE** NativeWind.
 
 ---
 

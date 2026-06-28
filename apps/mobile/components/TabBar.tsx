@@ -5,7 +5,6 @@ import {
   Pressable,
   StyleSheet,
   Dimensions,
-  useColorScheme,
   type LayoutChangeEvent,
 } from "react-native";
 import Animated, {
@@ -16,6 +15,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { useTheme } from "@/theme/useTheme";
 
 // ── Design tokens (from Pencil design — do not change) ───────────────
 const H_PAD = 16; // outer nav horizontal padding
@@ -28,7 +28,6 @@ const TB_H = 56; // tab-bar total height
 const CAP_H = TB_H - TB_PAD * 2; // capsule height = 54
 const ICON_SIZE = 22;
 const PLUS_ICON = 24;
-const LABEL_SIZE = 10;
 
 // ── Tab definitions ──────────────────────────────────────────────────
 type IoniconName = React.ComponentProps<typeof Ionicons>["name"];
@@ -78,7 +77,8 @@ function capsuleTargetX(index: number, cw: number): number {
 
 // ── TabBar ───────────────────────────────────────────────────────────
 export default function TabBar({ state, navigation }: BottomTabBarProps) {
-  const isDark = useColorScheme() === "dark";
+  const { colors, scheme } = useTheme();
+  const isDark = scheme === "dark";
 
   const [tbWidth, setTbWidth] = useState(estimateTabBarWidth);
   const capW = calcCapsuleWidth(tbWidth);
@@ -109,15 +109,17 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
     transform: [{ translateX: tx.value }],
   }));
 
-  // ── Colors (light / dark from Pencil tokens) ──
-  const tabBarBg = isDark ? "#131313D9" : "#FFFFFFD9";
-  const tabBarBorder = isDark ? "#1F1F1F" : "#E0E0E0";
-  const capsuleBg = isDark ? "#FFFFFF1A" : "#0000001A";
-  const activeColor = isDark ? "#FFFFFF" : "#131313";
-  const inactIconColor = isDark ? "#C4C7C8" : "#888888";
-  const inactLblColor = isDark ? "#8E9192" : "#888888";
-  const plusBg = isDark ? "#FFFFFF" : "#1A1A1A";
-  const plusIconColor = isDark ? "#131313" : "#FFFFFF";
+  // ── Colors derived from design tokens ──
+  const tabBarBorder = colors.borderDefault;
+  // Subtle glass-effect capsule: white tint in dark, black tint in light
+  const capsuleBg = isDark ? `${colors.interactiveBg}1A` : "rgba(0,0,0,0.1)";
+  // Active tab uses the highest-contrast foreground for the current scheme
+  const activeColor = colors.interactiveBg;
+  // Inactive: stronger icon in dark (more contrast on dark bg), default in light
+  const inactIconColor = isDark ? colors.iconStrong : colors.iconDefault;
+  const inactLblColor = colors.iconDefault;
+  const plusBg = colors.interactiveBg;
+  const plusIconColor = colors.interactiveText;
 
   return (
     <View
@@ -126,7 +128,7 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
     >
       {/* ── Pill-shaped tab container ──────────────── */}
       <View
-        className={`flex-1 h-14 rounded-full border flex-row items-center gap-1 p-px bg-bg-base`}
+        className="flex-1 h-14 rounded-full border flex-row items-center gap-1 p-px bg-bg-base"
         style={{ borderColor: tabBarBorder }}
         onLayout={handleLayout}
       >
