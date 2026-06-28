@@ -1,12 +1,22 @@
 name: mobile
 on:
-  push: { paths: ["apps/mobile/**", "packages/**"] }
-  pull_request: { paths: ["apps/mobile/**", "packages/**"] }
+  push:
+    {
+      paths:
+        ["apps/mobile/**", "packages/**", "package.json", "package-lock.json"],
+    }
+  pull_request:
+    {
+      paths:
+        ["apps/mobile/**", "packages/**", "package.json", "package-lock.json"],
+    }
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
       - run: npm ci
