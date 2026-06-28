@@ -18,6 +18,7 @@ const CLOSED_MENU: MenuState = { postId: null, anchor: { top: 0, right: 0 } };
 
 export default function HomeScreen() {
   const [menu, setMenu] = useState<MenuState>(CLOSED_MENU);
+  const [likedIds, setLikedIds] = useState<Record<string, boolean>>({});
 
   const handleMenuOpen = useCallback((id: string, anchor: MenuAnchor) => {
     setMenu({ postId: id, anchor });
@@ -27,16 +28,26 @@ export default function HomeScreen() {
     setMenu(CLOSED_MENU);
   }, []);
 
+  const handleLikeToggle = useCallback((id: string) => {
+    setLikedIds((prev) => ({ ...prev, [id]: !prev[id] }));
+  }, []);
+
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<Post>) => (
-      <PostCard
-        post={item}
-        isMenuOpen={menu.postId === item.id}
-        onMenuOpen={(anchor) => handleMenuOpen(item.id, anchor)}
-        onMenuClose={handleMenuClose}
-      />
-    ),
-    [menu.postId, handleMenuOpen, handleMenuClose],
+    ({ item }: ListRenderItemInfo<Post>) => {
+      const liked = !!likedIds[item.id];
+      return (
+        <PostCard
+          post={item}
+          liked={liked}
+          likeCount={item.likeCount + (liked ? 1 : 0)}
+          onLikeToggle={() => handleLikeToggle(item.id)}
+          isMenuOpen={menu.postId === item.id}
+          onMenuOpen={(anchor) => handleMenuOpen(item.id, anchor)}
+          onMenuClose={handleMenuClose}
+        />
+      );
+    },
+    [likedIds, menu.postId, handleLikeToggle, handleMenuOpen, handleMenuClose],
   );
 
   return (

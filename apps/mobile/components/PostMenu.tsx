@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Modal,
   View,
@@ -6,9 +6,9 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
-} from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { useTheme } from '@/theme/useTheme';
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { useTheme } from "@/theme/useTheme";
 
 export interface MenuAnchor {
   top: number;
@@ -54,9 +54,15 @@ function PostMenu({ isOpen, anchor, onClose }: Props) {
                 }}
               >
                 <View className="w-[30px] h-[30px] rounded-s items-center justify-center">
-                  <Feather name="download" size={15} color={colors.textPrimary} />
+                  <Feather
+                    name="download"
+                    size={15}
+                    color={colors.textPrimary}
+                  />
                 </View>
-                <Text className="font-sans text-[14px] text-text-primary">Download</Text>
+                <Text className="font-sans text-[14px] text-text-primary">
+                  Download
+                </Text>
               </Pressable>
 
               <View className="h-px bg-border-subtle" />
@@ -70,7 +76,9 @@ function PostMenu({ isOpen, anchor, onClose }: Props) {
                 <View className="w-[30px] h-[30px] rounded-s items-center justify-center">
                   <Feather name="share" size={15} color={colors.textPrimary} />
                 </View>
-                <Text className="font-sans text-[14px] text-text-primary">Share</Text>
+                <Text className="font-sans text-[14px] text-text-primary">
+                  Share
+                </Text>
               </Pressable>
 
               <View className="h-px bg-border-subtle" />
@@ -82,9 +90,15 @@ function PostMenu({ isOpen, anchor, onClose }: Props) {
                 }}
               >
                 <View className="w-[30px] h-[30px] rounded-s items-center justify-center">
-                  <Feather name="trash-2" size={15} color={sc.accentDangerStrong} />
+                  <Feather
+                    name="trash-2"
+                    size={15}
+                    color={sc.accentDangerStrong}
+                  />
                 </View>
-                <Text className="font-sans text-[14px] text-danger-strong">Delete Post</Text>
+                <Text className="font-sans text-[14px] text-danger-strong">
+                  Delete Post
+                </Text>
               </Pressable>
             </View>
           </TouchableWithoutFeedback>
@@ -96,7 +110,7 @@ function PostMenu({ isOpen, anchor, onClose }: Props) {
 
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: '#000000',
+    shadowColor: "#000000",
     shadowOffset: { width: 0, height: 16 },
     shadowOpacity: 0.63,
     shadowRadius: 40,

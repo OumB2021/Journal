@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { View, Text, Pressable, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { Feather } from '@expo/vector-icons';
@@ -9,13 +9,15 @@ import { useTheme } from '@/theme/useTheme';
 
 interface Props {
   post: Post;
+  liked: boolean;
+  likeCount: number;
+  onLikeToggle: () => void;
   isMenuOpen: boolean;
   onMenuOpen: (anchor: MenuAnchor) => void;
   onMenuClose: () => void;
 }
 
-function PostCard({ post, isMenuOpen, onMenuOpen, onMenuClose }: Props) {
-  const [liked, setLiked] = useState(false);
+function PostCard({ post, liked, likeCount, onLikeToggle, isMenuOpen, onMenuOpen, onMenuClose }: Props) {
   const { colors } = useTheme();
   const menuBtnRef = useRef<View>(null);
 
@@ -97,9 +99,9 @@ function PostCard({ post, isMenuOpen, onMenuOpen, onMenuClose }: Props) {
 
       {/* Like row */}
       <View className="flex-row items-center justify-between">
-        <LikeButton liked={liked} onToggle={() => setLiked((v) => !v)} />
+        <LikeButton liked={liked} onToggle={onLikeToggle} />
         <Text className="font-sans text-[13px] text-text-secondary">
-          {post.likeCount} likes
+          {likeCount} likes
         </Text>
       </View>
     </View>
