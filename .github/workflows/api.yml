@@ -1,0 +1,14 @@
+name: api
+on:
+  push: { paths: ["apps/api/**", "packages/**"] }
+  pull_request: { paths: ["apps/api/**", "packages/**"] }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run typecheck -w @journal/api
+      - run: npm run build -w @journal/api
