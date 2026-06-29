@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,27 +10,27 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image } from 'expo-image';
-import { Feather } from '@expo/vector-icons';
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Image } from "expo-image";
+import { Feather } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   runOnJS,
-} from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import type { ProfilePost } from '@/data/profileMockData';
-import { PROFILE_USER } from '@/data/profileMockData';
-import { useTheme } from '@/theme/useTheme';
+} from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import type { ProfilePost } from "@/data/profileMockData";
+import { PROFILE_USER } from "@/data/profileMockData";
+import { useTheme } from "@/theme/useTheme";
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 function formatCount(n: number): string {
   if (n >= 1000) {
     const val = n / 1000;
-    return (Number.isInteger(val) ? val.toString() : val.toFixed(1)) + 'K';
+    return (Number.isInteger(val) ? val.toString() : val.toFixed(1)) + "K";
   }
   return n.toString();
 }
@@ -41,7 +41,8 @@ interface Props {
 }
 
 export default function PostDetailPanel({ post, onClose }: Props) {
-  const { colors } = useTheme();
+  const { colors, static: sc } = useTheme();
+  const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(true);
   const translateX = useSharedValue(SCREEN_WIDTH);
 
@@ -94,12 +95,22 @@ export default function PostDetailPanel({ post, onClose }: Props) {
     >
       <GestureDetector gesture={panGesture}>
         <Animated.View
-          style={[styles.root, { backgroundColor: colors.bgBase }, animatedStyle]}
+          style={[
+            styles.root,
+            { backgroundColor: colors.bgBase },
+            animatedStyle,
+          ]}
         >
-          <SafeAreaView className="flex-1" edges={['top', 'bottom']}>
+          <View
+            style={{
+              flex: 1,
+              paddingTop: insets.top,
+              paddingBottom: insets.bottom,
+            }}
+          >
             <KeyboardAvoidingView
               className="flex-1"
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
               <ScrollView
                 className="flex-1"
@@ -121,10 +132,10 @@ export default function PostDetailPanel({ post, onClose }: Props) {
                     accessibilityLabel="Go back to profile"
                   >
                     <View
-                      className="w-9 h-9 rounded-full items-center justify-center"
-                      style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}
+                      className="size-9 rounded-full items-center justify-center"
+                      style={{ backgroundColor: "rgba(0,0,0,0.45)" }}
                     >
-                      <Feather name="arrow-left" size={20} color="#e5e2e1" />
+                      <Feather name="arrow-left" size={20} color="#F8F7F5" />
                     </View>
                   </Pressable>
                 </View>
@@ -157,7 +168,7 @@ export default function PostDetailPanel({ post, onClose }: Props) {
                     </View>
 
                     <Pressable
-                      className="px-[14px] py-[6px] rounded-full border"
+                      className="px-[14px] py-[6px] rounded-lg border"
                       style={{ borderColor: colors.textPrimary }}
                     >
                       <Text
@@ -187,15 +198,22 @@ export default function PostDetailPanel({ post, onClose }: Props) {
                   </Text>
 
                   {/* Hashtags */}
-                  <Text className="font-sans text-[14px] leading-[21px]" style={{ color: '#5B8DEF' }}>
-                    {post.hashtags.join(' ')}
+                  <Text
+                    className="font-sans text-[14px] leading-[21px]"
+                    style={{ color: sc.accentPrimary }}
+                  >
+                    {post.hashtags.join(" ")}
                   </Text>
 
                   {/* Engagement row */}
                   <View className="flex-row items-center justify-between py-xs">
                     <View className="flex-row items-center gap-5">
                       <View className="flex-row items-center gap-[6px]">
-                        <Feather name="heart" size={20} color={colors.iconDefault} />
+                        <Feather
+                          name="heart"
+                          size={20}
+                          color={colors.iconDefault}
+                        />
                         <Text
                           className="font-sans text-[14px]"
                           style={{ color: colors.textSecondary }}
@@ -204,7 +222,11 @@ export default function PostDetailPanel({ post, onClose }: Props) {
                         </Text>
                       </View>
                       <View className="flex-row items-center gap-[6px]">
-                        <Feather name="message-circle" size={20} color={colors.iconDefault} />
+                        <Feather
+                          name="message-circle"
+                          size={20}
+                          color={colors.iconDefault}
+                        />
                         <Text
                           className="font-sans text-[14px]"
                           style={{ color: colors.textSecondary }}
@@ -213,15 +235,25 @@ export default function PostDetailPanel({ post, onClose }: Props) {
                         </Text>
                       </View>
                     </View>
-                    <Feather name="bookmark" size={20} color={colors.iconDefault} />
+                    <Feather
+                      name="bookmark"
+                      size={20}
+                      color={colors.iconDefault}
+                    />
                   </View>
 
                   {/* Separator */}
-                  <View className="h-px" style={{ backgroundColor: colors.borderDefault }} />
+                  <View
+                    className="h-px"
+                    style={{ backgroundColor: colors.borderDefault }}
+                  />
 
                   {/* Comments */}
                   {post.comments.map((comment) => (
-                    <View key={comment.id} className="flex-row items-start gap-[10px]">
+                    <View
+                      key={comment.id}
+                      className="flex-row items-start gap-[10px]"
+                    >
                       <View className="w-8 h-8 rounded-full overflow-hidden shrink-0">
                         <Image
                           source={{ uri: comment.avatarUrl }}
@@ -274,10 +306,10 @@ export default function PostDetailPanel({ post, onClose }: Props) {
                   placeholder="Add a comment..."
                   placeholderTextColor={colors.textTertiary}
                 />
-                <Feather name="send" size={18} color="#5B8DEF" />
+                <Feather name="send" size={18} color={sc.accentPrimary} />
               </View>
             </KeyboardAvoidingView>
-          </SafeAreaView>
+          </View>
         </Animated.View>
       </GestureDetector>
     </Modal>
@@ -290,7 +322,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   heroImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
 });

@@ -1,11 +1,11 @@
-import React, { useRef, useCallback } from 'react';
-import { View, Text, Pressable, Dimensions } from 'react-native';
-import { Image } from 'expo-image';
-import { Feather } from '@expo/vector-icons';
-import type { Post } from '@/data/mockPosts';
-import LikeButton from './LikeButton';
-import type { MenuAnchor } from './PostMenu';
-import { useTheme } from '@/theme/useTheme';
+import React, { useRef, useCallback } from "react";
+import { View, Text, Pressable, Dimensions } from "react-native";
+import { Image } from "expo-image";
+import { Feather } from "@expo/vector-icons";
+import type { Post } from "@/data/mockPosts";
+import LikeButton from "./LikeButton";
+import type { MenuAnchor } from "./PostMenu";
+import { useTheme } from "@/theme/useTheme";
 
 interface Props {
   post: Post;
@@ -17,7 +17,15 @@ interface Props {
   onMenuClose: () => void;
 }
 
-function PostCard({ post, liked, likeCount, onLikeToggle, isMenuOpen, onMenuOpen, onMenuClose }: Props) {
+function PostCard({
+  post,
+  liked,
+  likeCount,
+  onLikeToggle,
+  isMenuOpen,
+  onMenuOpen,
+  onMenuClose,
+}: Props) {
   const { colors } = useTheme();
   const menuBtnRef = useRef<View>(null);
 
@@ -27,7 +35,8 @@ function PostCard({ post, liked, likeCount, onLikeToggle, isMenuOpen, onMenuOpen
       return;
     }
     menuBtnRef.current?.measureInWindow((x, y, width, height) => {
-      const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+      const { width: screenWidth, height: screenHeight } =
+        Dimensions.get("window");
       const MENU_HEIGHT = 160; // 3 rows × 52px + 2 dividers
       const spaceBelow = screenHeight - (y + height + 4);
       const top =
@@ -59,27 +68,44 @@ function PostCard({ post, liked, likeCount, onLikeToggle, isMenuOpen, onMenuOpen
             </Text>
           </View>
         </View>
-
-        <Pressable
-          ref={menuBtnRef}
-          className="w-7 h-7 rounded-[6px] items-center justify-center"
-          onPress={handleMenuPress}
-          hitSlop={8}
-        >
-          <Feather name="more-horizontal" size={18} color={colors.iconDefault} />
-        </Pressable>
+        <View className="flex-row items-center gap-4">
+          <Pressable
+            className="px-[14px] py-[6px] rounded-lg border"
+            style={{ borderColor: colors.textPrimary }}
+            onPress={() => {}}
+          >
+            <Text
+              className="font-sans-semibold text-[13px]"
+              style={{ color: colors.textPrimary }}
+            >
+              Follow
+            </Text>
+          </Pressable>
+          <Pressable
+            ref={menuBtnRef}
+            className="w-7 h-7 rounded-[6px] items-center justify-center"
+            onPress={handleMenuPress}
+            hitSlop={8}
+          >
+            <Feather
+              name="more-horizontal"
+              size={18}
+              color={colors.iconDefault}
+            />
+          </Pressable>
+        </View>
       </View>
 
       {/* Hero image with category badge */}
       <View className="h-[220px] rounded-s overflow-hidden">
         <Image
           source={{ uri: post.imageUrl }}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: "100%", height: "100%" }}
           contentFit="cover"
         />
         <View
           className="absolute bottom-[10px] left-[10px] rounded-[1px] py-xs px-[10px]"
-          style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}
+          style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
         >
           <Text className="font-sans-semibold text-[10px] text-text-on-accent">
             {post.category}
