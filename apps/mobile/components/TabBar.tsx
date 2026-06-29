@@ -78,7 +78,11 @@ function capsuleTargetX(index: number, cw: number): number {
 export const TAB_BAR_BOTTOM_INSET = TB_H + 34 + 16; // max safe-area (34) + base offset + breathing room
 
 // ── TabBar ───────────────────────────────────────────────────────────
-export default function TabBar({ state, navigation, insets }: BottomTabBarProps) {
+export default function TabBar({
+  state,
+  navigation,
+  insets,
+}: BottomTabBarProps) {
   const { colors, scheme } = useTheme();
   const isDark = scheme === "dark";
 

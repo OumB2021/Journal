@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -11,14 +11,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 // import { useAuth } from "@clerk/clerk-expo";
-import { useTheme } from "@/theme/useTheme";
+import { useTheme, useSetScheme } from "@/theme/useTheme";
 import { TAB_BAR_BOTTOM_INSET } from "@/components/TabBar";
 
 // ── Section label ─────────────────────────────────────────────────────
 function SectionLabel({ title }: { title: string }) {
-  const { colors } = useTheme();
   return (
-    <Text style={[styles.sectionLabel, { color: colors.iconStrong }]}>
+    <Text className="font-sans-semibold text-[11px] tracking-[2px] text-icon-strong">
       {title}
     </Text>
   );
@@ -26,10 +25,7 @@ function SectionLabel({ title }: { title: string }) {
 
 // ── Row divider ────────────────────────────────────────────────────────
 function Divider() {
-  const { colors } = useTheme();
-  return (
-    <View style={[styles.divider, { backgroundColor: colors.borderDefault }]} />
-  );
+  return <View className="h-px bg-border" />;
 }
 
 // ── Navigation row (label + chevron) ─────────────────────────────────
@@ -37,13 +33,11 @@ function NavRow({ label, onPress }: { label: string; onPress?: () => void }) {
   const { colors } = useTheme();
   return (
     <Pressable
-      style={styles.row}
+      className="flex-row items-center justify-between p-md"
       onPress={onPress}
       android_ripple={{ color: colors.borderDefault }}
     >
-      <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
-        {label}
-      </Text>
+      <Text className="font-sans text-[15px] text-text-primary">{label}</Text>
       <Feather name="chevron-right" size={18} color={colors.iconStrong} />
     </Pressable>
   );
@@ -62,17 +56,13 @@ function ValueRow({
   const { colors } = useTheme();
   return (
     <Pressable
-      style={styles.row}
+      className="flex-row items-center justify-between p-md"
       onPress={onPress}
       android_ripple={{ color: colors.borderDefault }}
     >
-      <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
-        {label}
-      </Text>
-      <View style={styles.valueContainer}>
-        <Text style={[styles.valueText, { color: colors.iconStrong }]}>
-          {value}
-        </Text>
+      <Text className="font-sans text-[15px] text-text-primary">{label}</Text>
+      <View className="flex-row items-center gap-xs">
+        <Text className="font-sans text-[14px] text-icon-strong">{value}</Text>
         <Feather name="chevron-right" size={16} color={colors.iconStrong} />
       </View>
     </Pressable>
@@ -91,10 +81,8 @@ function ToggleRow({
 }) {
   const { colors } = useTheme();
   return (
-    <View style={styles.row}>
-      <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>
-        {label}
-      </Text>
+    <View className="flex-row items-center justify-between p-md">
+      <Text className="font-sans text-[15px] text-text-primary">{label}</Text>
       <Switch
         value={value}
         onValueChange={onValueChange}
@@ -112,14 +100,8 @@ function Card({ children }: { children: React.ReactNode }) {
   const borderRadius = scheme === "dark" ? radii.dark.s : radii.light.s;
   return (
     <View
-      style={[
-        styles.card,
-        {
-          backgroundColor: colors.bgSurface,
-          borderColor: colors.borderDefault,
-          borderRadius,
-        },
-      ]}
+      className="border overflow-hidden"
+      style={{ backgroundColor: colors.bgSurface, borderColor: colors.borderDefault, borderRadius }}
     >
       {children}
     </View>
@@ -128,9 +110,9 @@ function Card({ children }: { children: React.ReactNode }) {
 
 // ── Settings Screen ────────────────────────────────────────────────────
 export default function SettingsScreen() {
-  const { colors, static: staticColors, scheme } = useTheme();
+  const { colors, scheme } = useTheme();
+  const setScheme = useSetScheme();
   // const { signOut } = useAuth();
-  const [darkMode, setDarkMode] = useState(scheme === "dark");
 
   function handleSignOut() {
     Alert.alert("Sign Out", "Are you sure you want to sign out?", [
@@ -141,14 +123,14 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView
-      style={[styles.safeArea, { backgroundColor: colors.bgBase }]}
+      style={{ flex: 1, backgroundColor: colors.bgBase }}
       edges={["top"]}
     >
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={[styles.title, { color: colors.textPrimary }]}>
+        <Text className="font-sans-bold text-[28px] leading-[34px] text-text-primary">
           Settings
         </Text>
 
@@ -167,8 +149,8 @@ export default function SettingsScreen() {
           <Divider />
           <ToggleRow
             label="Dark Mode"
-            value={darkMode}
-            onValueChange={setDarkMode}
+            value={scheme === "dark"}
+            onValueChange={(v) => setScheme(v ? "dark" : "light")}
           />
           <Divider />
           <ValueRow label="Language" value="English" />
@@ -185,10 +167,8 @@ export default function SettingsScreen() {
 
         {/* Sign Out — its own section in accentDanger */}
         <Card>
-          <Pressable style={styles.signOutRow} onPress={() => {}}>
-            <Text
-              style={[styles.signOutText, { color: staticColors.accentDanger }]}
-            >
+          <Pressable className="p-md items-center" onPress={handleSignOut}>
+            <Text className="font-sans-semibold text-[15px] text-danger">
               Sign Out
             </Text>
           </Pressable>
@@ -198,58 +178,13 @@ export default function SettingsScreen() {
   );
 }
 
+// contentContainerStyle must be a style object (not className); TAB_BAR_BOTTOM_INSET
+// is a runtime value, so this is the only StyleSheet entry that remains.
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   content: {
     paddingTop: 8,
     paddingHorizontal: 16,
     paddingBottom: TAB_BAR_BOTTOM_INSET,
     gap: 24,
-  },
-  title: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 28,
-    lineHeight: 34,
-  },
-  sectionLabel: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 11,
-    letterSpacing: 2,
-  },
-  card: {
-    borderWidth: 1,
-    overflow: "hidden",
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 16,
-  },
-  rowLabel: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 15,
-  },
-  valueContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  valueText: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 14,
-  },
-  signOutRow: {
-    padding: 16,
-    alignItems: "center",
-  },
-  signOutText: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 15,
   },
 });
