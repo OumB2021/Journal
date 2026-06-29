@@ -11,7 +11,7 @@ import {
   Platform,
   StyleSheet,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { Feather } from "@expo/vector-icons";
 import Animated, {
@@ -42,6 +42,7 @@ interface Props {
 
 export default function PostDetailPanel({ post, onClose }: Props) {
   const { colors, static: sc } = useTheme();
+  const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(true);
   const translateX = useSharedValue(SCREEN_WIDTH);
 
@@ -100,7 +101,13 @@ export default function PostDetailPanel({ post, onClose }: Props) {
             animatedStyle,
           ]}
         >
-          <SafeAreaView className="flex-1" edges={["top", "bottom"]}>
+          <View
+            style={{
+              flex: 1,
+              paddingTop: insets.top,
+              paddingBottom: insets.bottom,
+            }}
+          >
             <KeyboardAvoidingView
               className="flex-1"
               behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -161,7 +168,7 @@ export default function PostDetailPanel({ post, onClose }: Props) {
                     </View>
 
                     <Pressable
-                      className="px-[14px] py-[6px] rounded-full border"
+                      className="px-[14px] py-[6px] rounded-lg border"
                       style={{ borderColor: colors.textPrimary }}
                     >
                       <Text
@@ -302,7 +309,7 @@ export default function PostDetailPanel({ post, onClose }: Props) {
                 <Feather name="send" size={18} color={sc.accentPrimary} />
               </View>
             </KeyboardAvoidingView>
-          </SafeAreaView>
+          </View>
         </Animated.View>
       </GestureDetector>
     </Modal>
