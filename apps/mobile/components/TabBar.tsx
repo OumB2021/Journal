@@ -74,8 +74,11 @@ function capsuleTargetX(index: number, cw: number): number {
   return TB_PAD + index * (cw + TB_GAP);
 }
 
+// ── Shared inset constant — import this in scrollable screens ────────
+export const TAB_BAR_BOTTOM_INSET = TB_H + 34 + 16; // max safe-area (34) + base offset + breathing room
+
 // ── TabBar ───────────────────────────────────────────────────────────
-export default function TabBar({ state, navigation }: BottomTabBarProps) {
+export default function TabBar({ state, navigation, insets }: BottomTabBarProps) {
   const { colors, scheme } = useTheme();
   const isDark = scheme === "dark";
 
@@ -123,7 +126,10 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
   const plusIconColor = colors.interactiveText;
 
   return (
-    <View className="absolute bottom-[24] flex-row items-center justify-center gap-3 px-4">
+    <View
+      className="absolute flex-row items-center justify-center gap-3 px-4"
+      style={{ bottom: Math.max(insets.bottom, 24) }}
+    >
       {/* ── Pill-shaped tab container ──────────────── */}
       <View
         className="flex-1 h-14 rounded-full border flex-row items-center gap-1 p-px bg-bg-base backdrop-blur-lg"

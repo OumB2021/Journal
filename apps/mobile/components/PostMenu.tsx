@@ -50,6 +50,7 @@ function PostMenu({ isOpen, anchor, onClose }: Props) {
               <Pressable
                 className="flex-row items-center h-[52px] px-[14px] gap-3"
                 onPress={() => {
+                  onClose();
                   // TODO: download
                 }}
               >
@@ -70,6 +71,7 @@ function PostMenu({ isOpen, anchor, onClose }: Props) {
               <Pressable
                 className="flex-row items-center h-[52px] px-[14px] gap-3"
                 onPress={() => {
+                  onClose();
                   // TODO: share
                 }}
               >
@@ -86,6 +88,7 @@ function PostMenu({ isOpen, anchor, onClose }: Props) {
               <Pressable
                 className="flex-row items-center h-[52px] px-[14px] gap-3"
                 onPress={() => {
+                  onClose();
                   // TODO: delete post
                 }}
               >

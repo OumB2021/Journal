@@ -22,10 +22,7 @@ export default function ProfileHeader({ user }: Props) {
         {user.name}
       </Text>
 
-      <Text
-        className="font-sans text-[14px] text-icon-strong text-center"
-        style={{ lineHeight: 21 }}
-      >
+      <Text className="font-sans text-[14px] text-icon-strong text-center leading-[21px]">
         {user.bio}
       </Text>
     </>

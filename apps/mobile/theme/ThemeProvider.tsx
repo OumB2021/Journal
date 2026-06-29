@@ -2,7 +2,7 @@ import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { lightTheme, darkTheme, type Theme } from './theme';
 
-export const ThemeContext = createContext<Theme>(darkTheme);
+export const ThemeContext = createContext<Theme | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const scheme = useColorScheme();
@@ -14,5 +14,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useTheme(): Theme {
-  return useContext(ThemeContext);
+  const ctx = useContext(ThemeContext);
+  if (ctx === null) throw new Error('useTheme must be used inside <ThemeProvider>');
+  return ctx;
 }

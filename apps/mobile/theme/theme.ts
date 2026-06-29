@@ -57,18 +57,18 @@ export interface Theme {
   radii: Radii;
 }
 
-export const lightTheme: Theme = {
-  scheme: 'light',
+export const lightTheme = {
+  scheme: 'light' as const,
   colors: lightColors as ThemeColors,
   static: staticColors as StaticColors,
   spacing: spacing as Spacing,
   radii: radii as Radii,
-};
+} satisfies Theme;
 
-export const darkTheme: Theme = {
-  scheme: 'dark',
+export const darkTheme = {
+  scheme: 'dark' as const,
   colors: darkColors as ThemeColors,
   static: staticColors as StaticColors,
   spacing: spacing as Spacing,
   radii: radii as Radii,
-};
+} satisfies Theme;

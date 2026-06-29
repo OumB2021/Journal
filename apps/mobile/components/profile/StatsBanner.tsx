@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import type { ProfileUser } from '@/data/profileMockData';
 
 interface Props {
@@ -8,10 +8,8 @@ interface Props {
 
 function StatItem({ value, label }: { value: string | number; label: string }) {
   return (
-    <View className="items-center" style={{ gap: 2 }}>
-      <Text className="font-sans-bold text-[22px] text-text-primary">
-        {value}
-      </Text>
+    <View className="items-center gap-0.5">
+      <Text className="font-sans-bold text-[22px] text-text-primary">{value}</Text>
       <Text className="font-sans text-[12px] text-icon-strong">{label}</Text>
     </View>
   );
@@ -19,21 +17,10 @@ function StatItem({ value, label }: { value: string | number; label: string }) {
 
 export default function StatsBanner({ user }: Props) {
   return (
-    <View
-      className="bg-bg-surface border border-border w-full flex-row justify-between items-center"
-      style={styles.card}
-    >
+    <View className="bg-bg-surface border border-border w-full flex-row justify-between items-center rounded-[5px] py-md px-lg">
       <StatItem value={user.postCount} label="Posts" />
       <StatItem value={user.followerCount} label="Followers" />
       <StatItem value={user.followingCount} label="Following" />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 5,
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-  },
-});

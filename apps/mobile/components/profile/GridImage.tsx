@@ -12,7 +12,12 @@ function GridImage({ post, onPress }: Props) {
   const handlePress = useCallback(() => onPress(post), [onPress, post]);
 
   return (
-    <Pressable style={styles.container} onPress={handlePress}>
+    <Pressable
+      style={styles.container}
+      onPress={handlePress}
+      accessibilityRole="button"
+      accessibilityLabel={`${post.category} post: ${post.title}`}
+    >
       <Image
         source={{ uri: post.imageUrl }}
         style={styles.image}

@@ -27,11 +27,14 @@ function PostCard({ post, liked, likeCount, onLikeToggle, isMenuOpen, onMenuOpen
       return;
     }
     menuBtnRef.current?.measureInWindow((x, y, width, height) => {
-      const screenWidth = Dimensions.get('window').width;
-      onMenuOpen({
-        top: y + height + 4,
-        right: screenWidth - x - width,
-      });
+      const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+      const MENU_HEIGHT = 160; // 3 rows × 52px + 2 dividers
+      const spaceBelow = screenHeight - (y + height + 4);
+      const top =
+        spaceBelow >= MENU_HEIGHT
+          ? y + height + 4
+          : Math.max(0, y - MENU_HEIGHT - 4);
+      onMenuOpen({ top, right: screenWidth - x - width });
     });
   }, [isMenuOpen, onMenuClose, onMenuOpen]);
 

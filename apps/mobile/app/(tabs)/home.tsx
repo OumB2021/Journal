@@ -8,6 +8,7 @@ import PostMenu from "@/components/PostMenu";
 import HomeHeader from "@/components/HomeHeader";
 import type { MenuAnchor } from "@/components/PostMenu";
 import { spacing } from "@/theme";
+import { TAB_BAR_BOTTOM_INSET } from "@/components/TabBar";
 
 interface MenuState {
   postId: string | null;
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
   list: {
     paddingHorizontal: spacing.md,
     paddingTop: spacing.sm,
-    paddingBottom: spacing.lg,
+    paddingBottom: TAB_BAR_BOTTOM_INSET,
     gap: spacing.lg,
   },
 });
