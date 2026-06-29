@@ -5,7 +5,6 @@ import {
   Pressable,
   StyleSheet,
   Dimensions,
-  useColorScheme,
   type LayoutChangeEvent,
 } from "react-native";
 import Animated, {
@@ -16,19 +15,18 @@ import Animated, {
 } from "react-native-reanimated";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { useTheme } from "@/theme/useTheme";
 
 // ── Design tokens (from Pencil design — do not change) ───────────────
 const H_PAD = 16; // outer nav horizontal padding
-const B_PAD = 25; // outer nav bottom padding
 const PLUS_SIZE = 56; // plus button diameter
 const NAV_GAP = 12; // gap between pill and plus button
 const TB_PAD = 1; // tab-bar inner padding (all 4 sides)
 const TB_GAP = 4; // gap between the 3 tab slots
-const TB_H = 56; // tab-bar total height
+const TB_H = 60; // tab-bar total height
 const CAP_H = TB_H - TB_PAD * 2; // capsule height = 54
 const ICON_SIZE = 22;
 const PLUS_ICON = 24;
-const LABEL_SIZE = 10;
 
 // ── Tab definitions ──────────────────────────────────────────────────
 type IoniconName = React.ComponentProps<typeof Ionicons>["name"];
@@ -76,9 +74,13 @@ function capsuleTargetX(index: number, cw: number): number {
   return TB_PAD + index * (cw + TB_GAP);
 }
 
+// ── Shared inset constant — import this in scrollable screens ────────
+export const TAB_BAR_BOTTOM_INSET = TB_H + 34 + 16; // max safe-area (34) + base offset + breathing room
+
 // ── TabBar ───────────────────────────────────────────────────────────
-export default function TabBar({ state, navigation }: BottomTabBarProps) {
-  const isDark = useColorScheme() === "dark";
+export default function TabBar({ state, navigation, insets }: BottomTabBarProps) {
+  const { colors, scheme } = useTheme();
+  const isDark = scheme === "dark";
 
   const [tbWidth, setTbWidth] = useState(estimateTabBarWidth);
   const capW = calcCapsuleWidth(tbWidth);
@@ -109,25 +111,29 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
     transform: [{ translateX: tx.value }],
   }));
 
-  // ── Colors (light / dark from Pencil tokens) ──
-  const tabBarBg = isDark ? "#131313D9" : "#FFFFFFD9";
-  const tabBarBorder = isDark ? "#1F1F1F" : "#E0E0E0";
-  const capsuleBg = isDark ? "#FFFFFF1A" : "#0000001A";
-  const activeColor = isDark ? "#FFFFFF" : "#131313";
-  const inactIconColor = isDark ? "#C4C7C8" : "#888888";
-  const inactLblColor = isDark ? "#8E9192" : "#888888";
-  const plusBg = isDark ? "#FFFFFF" : "#1A1A1A";
-  const plusIconColor = isDark ? "#131313" : "#FFFFFF";
+  // ── Colors derived from design tokens ──
+  const tabBarBorder = colors.borderDefault;
+  // Subtle glass-effect capsule: interactiveBg is white in dark (#FFFFFF) and
+  // near-black in light (#1A1A1A), so appending 1A (≈10% opacity) produces the
+  // correct tint in both schemes without any hardcoded literal.
+  const capsuleBg = `${colors.interactiveBg}1A`;
+  // Active tab uses the highest-contrast foreground for the current scheme
+  const activeColor = colors.interactiveBg;
+  // Inactive: stronger icon in dark (more contrast on dark bg), default in light
+  const inactIconColor = isDark ? colors.iconStrong : colors.iconDefault;
+  const inactLblColor = colors.iconDefault;
+  const plusBg = colors.interactiveBg;
+  const plusIconColor = colors.interactiveText;
 
   return (
     <View
-      className="bg-bg-base flex-row items-center justify-center gap-3 px-4"
-      style={{ paddingBottom: B_PAD }}
+      className="absolute flex-row items-center justify-center gap-3 px-4"
+      style={{ bottom: Math.max(insets.bottom, 24) }}
     >
       {/* ── Pill-shaped tab container ──────────────── */}
       <View
-        className={`flex-1 h-14 rounded-full border flex-row items-center gap-1 p-px bg-bg-base`}
-        style={{ borderColor: tabBarBorder }}
+        className="flex-1 h-14 rounded-full border flex-row items-center gap-1 p-px bg-bg-base backdrop-blur-lg"
+        style={{ borderColor: tabBarBorder, height: TB_H }}
         onLayout={handleLayout}
       >
         {/* Animated capsule — rendered first so it sits behind icons */}
@@ -172,8 +178,8 @@ export default function TabBar({ state, navigation }: BottomTabBarProps) {
 
       {/* ── Plus CTA — separate floating circle, NOT a tab ─ */}
       <Pressable
-        className="w-14 h-14 rounded-full items-center justify-center"
-        style={{ backgroundColor: plusBg }}
+        className="w-14 rounded-full items-center justify-center"
+        style={{ backgroundColor: plusBg, height: TB_H, width: TB_H }}
         onPress={() => {
           /* TODO */
         }}
@@ -190,8 +196,8 @@ const styles = StyleSheet.create({
   capsule: {
     position: "absolute",
     left: 0,
-    top: 1,
-    height: 45,
+    top: 0,
+    height: CAP_H,
     borderRadius: 999,
   },
 });
