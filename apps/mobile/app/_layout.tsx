@@ -10,6 +10,7 @@ import {
 } from "@expo-google-fonts/inter";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemeProvider } from "@/theme";
+import Toast from "@/components/Toast";
 import "../global.css";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -36,6 +37,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider>
         <Stack screenOptions={{ headerShown: false }} />
+        <Toast />
       </ThemeProvider>
     </GestureHandlerRootView>
   );
