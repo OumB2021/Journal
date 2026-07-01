@@ -16,6 +16,7 @@ import Animated, {
 import { Ionicons, Feather } from "@expo/vector-icons";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useTheme } from "@/theme/useTheme";
+import AddPostPanel from "@/components/AddPostPanel";
 
 // ── Design tokens (from Pencil design — do not change) ───────────────
 const H_PAD = 16; // outer nav horizontal padding
@@ -85,6 +86,7 @@ export default function TabBar({
 }: BottomTabBarProps) {
   const { colors, scheme } = useTheme();
   const isDark = scheme === "dark";
+  const [addPostVisible, setAddPostVisible] = useState(false);
 
   const [tbWidth, setTbWidth] = useState(estimateTabBarWidth);
   const capW = calcCapsuleWidth(tbWidth);
@@ -184,14 +186,16 @@ export default function TabBar({
       <Pressable
         className="w-14 rounded-full items-center justify-center"
         style={{ backgroundColor: plusBg, height: TB_H, width: TB_H }}
-        onPress={() => {
-          /* TODO */
-        }}
+        onPress={() => setAddPostVisible(true)}
         accessibilityRole="button"
         accessibilityLabel="New entry"
       >
         <Feather name="plus" size={PLUS_ICON} color={plusIconColor} />
       </Pressable>
+
+      {addPostVisible && (
+        <AddPostPanel onClose={() => setAddPostVisible(false)} />
+      )}
     </View>
   );
 }
